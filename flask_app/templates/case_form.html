@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container">
+      <div class="p-3 mb-2 bg-primary text-white">
+        <p class="h4">사건검색</p>
+      </div>
+      <form method="post">
+        <div class="form-group row">
+          <!-- 법원 선택-->
+  	  <div class="col-sm-10">
+            <select name="sch_bub_nm" class="form-control">
+              {% for sch_bub_nm in sch_bub_nm_list %}
+	        <option value="{{sch_bub_nm}}">{{sch_bub_nm}}</option>
+              {% endfor %}
+            </select>
+          </div>
+	  <!-- 년도 -->
+	  <div class="col-sm-10">
+            <select name="sel_sa_year" class="form-control">
+              {% for sel_sa_year in sel_sa_year_list %}
+	        <option value="{{sel_sa_year}}">{{sel_sa_year}}</option>
+              {% endfor %}
+            </select>
+          </div>
+	  <!-- 사건구분 -->
+	  <div class="col-sm-10">
+            <select name="sa_gubun" class="form-control">
+              {% for sa_gubun in sa_gubun_list %}
+	        <option value="{{sa_gubun}}">{{sa_gubun}}</option>
+              {% endfor %}
+            </select>
+          </div>
+	  <!-- 사건번호 -->
+          <div class="col-sm-10">
+	    <input type="text" class='form-control' name='sa_serial' placeholder='사건번호'>
+          </div>
+	  <!-- 당사자명 -->
+          <div class="col-sm-10">
+	    <input type="text" class='form-control' name='ds_nm' placeholder='당사자명'>
+          </div>
+        </div>
+        <div class="form-group row">
+          <!-- 자동입력방지문자 -->
+          <div class="col-sm-10">
+            <input type="text" class='form-control' name='answer' placeholder='자동입력방지문자'>
+          </div>
+          <!-- 검색 -->
+	  <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">검색</button>
+          </div>
+        </div>
+      </form>
+    <div>
+{% endblock %}
+
+
+<!--
+sch_bub_nm     	대법원	-> 00020
+sel_sa_year	2019	
+sa_gubun	다	-> hs
+sa_serial	91015
+ds_nm		김기웅
+answer		592396
+-->
