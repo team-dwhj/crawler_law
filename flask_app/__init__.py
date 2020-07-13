@@ -22,6 +22,21 @@ def get_list(list_name):
 
 @app.route("/", methods=['GET', 'POST'])
 def search_case():
+
+    def download_captcha_img(session):
+
+        # Todo-HJ: url constant로 빼야함
+        req = session.get("https://safind.scourt.go.kr/sf/captchaImg?t=image")
+
+        # TODO-DW: captcha 이미지 여기다 저장하면 되는지?
+        if req.status_code == 200:
+            with open('/static/captcha.png', 'wb') as f:
+                for chunk in req:
+                    f.write(chunk)
+            return True
+        else:
+            return False
+
     print('index')
     print(session)
 
@@ -31,6 +46,13 @@ def search_case():
         session.permanent = True                        # session의 유효기간을 한달로
 
         # TODO-HJ 캡챠 가져오기
+        # TODO-DW: session 하고 request 변수를 어떻게 해야하는지?
+        if download_captcha_img(session):
+            # TODO-DW: 성공했을 때
+            pass
+        else:
+            # Todo-DW: 실패했을 때
+            pass
 
         # TODO-DW case_form.html에 캡챠 이미지 추가하기 
         return render_template('case_form.html', sch_bub_nm_list=get_list('sch_bub_nm'), sa_gubun_list=get_list('sa_gubun'))    # ./templates/case_form.html 렌더링
@@ -65,3 +87,4 @@ def down_doc():
     print(session)
 
     return render_template('down_doc.html')         # ./templates/down.doc.html 렌더링
+
