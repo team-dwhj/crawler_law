@@ -4,6 +4,7 @@ from os import path
 from csv import reader
 import requests
 from requests.cookies import RequestsCookieJar
+from bs4 import BeautifulSoup
 
 # configure app
 app = Flask(__name__)
@@ -54,7 +55,7 @@ def search_sagun(form_data):
         response: requests.models.Response = s.post(url, data=form_data)
 
         if response.status_code == 200:
-            # bs: BeautifulSoup = BeautifulSoup(response.text, "html.parser")
+            bs = BeautifulSoup(response.text, "html.parser")
             pass
         else:
             # Todo: Failure 처리
@@ -63,6 +64,9 @@ def search_sagun(form_data):
         # Todo: 전처리 코드
 
         # return bs
+        #return BeautifulSoup
+        print(response)
+        return response.txt
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -85,13 +89,13 @@ def search_case():
             pass
 
         # TODO-DW case_form.html에 캡챠 이미지 추가하기 
-        return render_template('case_form.html', sch_bub_nm_list=get_list('sch_bub_nm'),
+        return render_template('case_form.html',
+                               force_refresh=session['cookies']['JSESSIONID'],
+                               sch_bub_nm_list=get_list('sch_bub_nm'),
                                sa_gubun_list=get_list('sa_gubun'))  # ./templates/case_form.html 렌더링
 
     elif request.method == 'POST':
-        session.update(request.form)  # post request로 받아온 사건 정보를 session에 저장
-
-        # TODO-DW 사건검색결과 parsing
+        session['form_data'] = request.form  # post request로 받아온 사건 정보를 session에 저장
 
         return redirect(url_for('gen_doc'))  # gen_doc()함수에 상응하는 주소로 redirect
 
@@ -105,6 +109,9 @@ def gen_doc():
         return redirect(get(request.host_url[:-1] + url_for('gen_doc'), {'gen_doc_begin': True}).url)
 
     else:
+        # TODO-DW 사건검색결과 parsing
+        return search_sagun(session['form_data'])
+        
         # TODO-HJ 문서 생성 (경로는 ./static에)
 
         # while not path.isfile('/documents/doc.docx'):   # 파일이 생성될때까지 wait
